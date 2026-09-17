@@ -182,7 +182,7 @@ function ProjectCard({ project, selected, locale, t, onOpen }: { project: Projec
     <div className="project-identity"><div className="card-topline"><div className="card-labels"><span className="resource-pill">{project.resources.length} {t.resources}</span>{project.coolify.sourceType && <span className="source-pill">{project.coolify.sourceType}</span>}{project.resources.some((resource) => resource.coolify.deploymentInProgress) && <span className="deployment-pill"><Rocket size={12} />{t.deploying}</span>}</div>{project.featured && <span className="featured-star" aria-label="Featured">✦</span>}</div><h2>{project.title}</h2><p>{project.summary}</p>{project.coolify.lastSuccessfulDeploymentAt && <span className="last-deployment"><Rocket size={13} />{t.lastDeployed}: {formatRelativeTime(project.coolify.lastSuccessfulDeploymentAt, locale)}</span>}<div className="component-labels" aria-label="Project resources">{project.resources.map((resource) => <span key={resource.id}>{resource.label}</span>)}</div><div className="stack-block"><span>{t.stack}</span><div className="tech-list">{project.technologies.map((tech) => <span key={tech.id}>{tech.name}</span>)}</div></div></div>
     <div className="project-metrics"><StatusPill status={project.health.status} t={t} /><div className="metric-main"><strong>{formatPercent(project.health.uptime30d, t.noHistory)}</strong><span>{t.uptime30}</span></div><UptimeBars values={project.health.daily} label={t.uptime30} /><div className="metric-row"><span>{project.health.streakDays == null ? "—" : project.health.streakDays.toFixed(project.health.streakDays < 10 ? 1 : 0)} {t.daysRunning}</span><span>{project.health.latencyMs == null ? "—" : `${project.health.latencyMs}ms`} {t.response}</span></div></div>
     <div className="project-art">{project.cover ? <img src={project.cover.srcSmall} alt={project.cover.alt} loading="lazy" /> : <PlaceholderArt seed={project.slug} />}<a className="art-action" href={project.liveUrl} target="_blank" rel="noreferrer" aria-label={`${t.openApp}: ${project.title}`}><ArrowUpRight size={18} /></a></div>
-    <a className="card-report-action" href={reportUrl(project, locale)} aria-label={`${t.reportProblem}: ${project.title}`} title={t.reportProblem}><MessageCircleWarning size={17} /></a>
+    <a className="card-report-action" href={reportUrl(project, locale)} target="_blank" rel="noreferrer" aria-label={`${t.reportProblem}: ${project.title}`} title={t.reportProblem}><MessageCircleWarning size={17} /></a>
     <a className="card-live-compact" href={project.liveUrl} target="_blank" rel="noreferrer" aria-label={`${t.openApp}: ${project.title}`}><ArrowUpRight size={18} /></a>
   </article>;
 }
@@ -199,7 +199,7 @@ const ProjectPanel = forwardRef<HTMLElement, ProjectPanelProps>(function Project
       <section className="panel-section"><h3>{t.reliability}</h3>{project.health.status === "collecting" && <p className="collecting-explainer">{t.collectingExplanation}</p>}<div className="stat-grid">{[[t.period24h, project.uptime.h24], [t.period7d, project.uptime.d7], [t.period30d, project.uptime.d30], [t.allTime, project.uptime.all]].map(([label, value]) => <div className="stat-cell" key={String(label)}><span>{label}</span><strong>{formatPercent(value as number | null, "—")}</strong></div>)}</div><UptimeBars values={project.health.daily} label={t.uptime30} large /><LatencyChart values={project.latencySeries.map((point) => point.value)} label={t.latency} /><div className="detail-metrics"><p><span>{t.currentStreak}</span><strong>{project.health.streakDays == null ? "—" : `${project.health.streakDays.toFixed(1)} ${t.daysRunning}`}</strong></p><p><span>{t.latency}</span><strong>{project.health.latencyMs == null ? "—" : `${project.health.latencyMs} ms`}</strong></p><p><span>{t.lastCheck}</span><strong>{project.health.lastCheckedAt ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(project.health.lastCheckedAt)) : "—"}</strong></p></div></section>
       <section className="panel-section"><h3>{t.componentReliability}</h3><div className="component-health-list">{project.resources.map((resource) => resource.uptimeEnabled && resource.uptime ? <ResourceReliability key={resource.id} resource={resource} locale={locale} t={t} /> : <article className="component-health-card unmonitored" key={resource.id}><strong>{resource.label}</strong><small>{resource.resourceType} · {t.coolifyOnly}</small></article>)}</div></section>
       <section className="panel-section"><h3>{t.incidents}</h3>{project.incidents.length === 0 ? <p>{t.noIncidents}</p> : <div className="incident-list">{project.incidents.map((incident) => <div key={incident.startedAt}><span className={incident.endedAt ? "recovered" : "ongoing"} /> <p><strong>{incident.endedAt ? t.recovered : t.ongoing}</strong><small>{new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(incident.startedAt))}{incident.endedAt ? ` → ${new Intl.DateTimeFormat(locale, { timeStyle: "short" }).format(new Date(incident.endedAt))}` : ""}</small><small>{incident.statusCode ? `HTTP ${incident.statusCode}` : incident.trigger ? humanizeMachine(incident.trigger) : ""}{incident.endedAt ? ` · ${formatDuration(incident.startedAt, incident.endedAt, locale)}` : ""}</small></p></div>)}</div>}</section>
-      <div className="panel-actions">{project.caseStudyUrl && <a className="primary-button" href={project.caseStudyUrl} target="_blank" rel="noreferrer">{t.caseStudy}<ArrowUpRight size={17} /></a>}{project.repositoryUrl && <a className="secondary-button" href={project.repositoryUrl} target="_blank" rel="noreferrer"><Github size={17} />{t.repository}</a>}<a className="secondary-button report-problem-button" href={reportUrl(project, locale)}><MessageCircleWarning size={17} />{t.reportProblem}</a></div>
+      <div className="panel-actions">{project.caseStudyUrl && <a className="primary-button" href={project.caseStudyUrl} target="_blank" rel="noreferrer">{t.caseStudy}<ArrowUpRight size={17} /></a>}{project.repositoryUrl && <a className="secondary-button" href={project.repositoryUrl} target="_blank" rel="noreferrer"><Github size={17} />{t.repository}</a>}<a className="secondary-button report-problem-button" href={reportUrl(project, locale)} target="_blank" rel="noreferrer"><MessageCircleWarning size={17} />{t.reportProblem}</a></div>
       <ProjectCarousel key={project.id} project={project} t={t} />
     </div>}
   </aside></>;
@@ -259,7 +259,7 @@ function OperationalBanner({ project, locale, t, panel = false }: { project: Pro
   return <div className={`operational-banner notice-${noticeType} ${panel ? "panel-notice" : ""}`}>
     <NoticeIcon size={panel ? 20 : 18} />
     <span className="operational-copy"><strong>{title}</strong><small>{detail}</small>{incident && <small>{t.incidentUserPrompt}</small>}</span>
-    {(noticeType === "incident" || noticeType === "maintenance") && <a href={reportUrl(project, locale)}><MessageCircleWarning size={15} />{t.contactOwner}</a>}
+    {(noticeType === "incident" || noticeType === "maintenance") && <a href={reportUrl(project, locale)} target="_blank" rel="noreferrer"><MessageCircleWarning size={15} />{t.contactOwner}</a>}
   </div>;
 }
 
@@ -310,7 +310,13 @@ function humanizeMachine(value: string) { return value.replaceAll(/[:_-]+/g, " "
 function reportUrl(project: ProjectSummary, locale: Locale) {
   const subject = locale === "es" ? `Problema con ${project.title}` : `Problem with ${project.title}`;
   const body = locale === "es" ? `Estoy usando ${project.title} (${project.liveUrl}) y he encontrado este problema: ` : `I am using ${project.title} (${project.liveUrl}) and found this problem: `;
-  return `mailto:andres@izbri.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const url = new URL("https://mail.google.com/mail/");
+  url.searchParams.set("view", "cm");
+  url.searchParams.set("fs", "1");
+  url.searchParams.set("to", "andres@izbri.com");
+  url.searchParams.set("su", subject);
+  url.searchParams.set("body", body);
+  return url.toString();
 }
 function formatRelativeTime(value: string, locale: Locale) {
   const difference = Date.parse(value) - Date.now();

@@ -141,7 +141,7 @@ test("sample operational notices distinguish deployments, maintenance, and incid
   await expect(lumen.locator(".operational-banner")).toContainText("Active incident");
   await expect(lumen.locator(".operational-banner")).toContainText("HTTP 503");
   await expect(lumen.locator(".operational-banner").getByRole("link", { name: /Contact the owner/ })).toBeVisible();
-  await expect(lumen.getByRole("link", { name: /Report a problem/ })).toHaveAttribute("href", /^mailto:andres@izbri\.com\?subject=/);
+  await expect(lumen.getByRole("link", { name: /Report a problem/ })).toHaveAttribute("href", /^https:\/\/mail\.google\.com\/mail\/\?view=cm&fs=1&to=andres%40izbri\.com&su=/);
 });
 
 test("switching detail projects does not replay list entrance animation", async ({ page }) => {
