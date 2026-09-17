@@ -267,7 +267,6 @@ function MetaFact({ label, value, mono = false }: { label: string; value: string
 
 function ProjectCarousel({ project, t }: { project: ProjectDetail; t: ReturnType<typeof getMessages> }) {
   const slides: { id: string; src: string | null; alt: string }[] = [
-    ...(project.cover ? [{ id: "cover", src: project.cover.src, alt: project.cover.alt }] : []),
     ...project.gallery.map((image) => ({ id: image.id, src: image.src, alt: image.alt })),
   ];
   if (slides.length === 0) slides.push({ id: "placeholder", src: null, alt: "" });
