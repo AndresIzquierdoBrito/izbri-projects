@@ -7,7 +7,6 @@ A bilingual public portfolio and independent uptime dashboard for the applicatio
 - `frontend`: Next.js visitor dashboard and owner interface.
 - `backend`: Express API, GitHub OAuth owner sessions, Coolify catalog adapter, SQLite persistence, media processing, and availability worker.
 - `packages/contracts`: shared Zod schemas and TypeScript response types.
-- `docs/PRODUCT-DESIGN.md`: living product/design reference. Update it whenever identity, product, or interaction directives change.
 
 Coolify is read-only. It supplies resource metadata and safe Sentinel capability/pulse settings; this application owns publication, bilingual content, images, uptime checks, incident history, and latency data.
 
